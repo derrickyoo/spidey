@@ -1,0 +1,20 @@
+{
+  "name": "spidey",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx ./src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check",
+    "format": "biome format --write"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.6",
+    "@types/node": "^25.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
