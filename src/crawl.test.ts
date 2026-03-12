@@ -1,6 +1,7 @@
 import {
   getFirstParagraphFromHTML,
   getHeadingFromHTML,
+  getImagesFromHTML,
   getURLsFromHTML,
   normalizeURL,
 } from "./crawl";
@@ -129,6 +130,37 @@ test("getURLsFromHTML from both absolute and relative", () => {
   const expected = [
     "https://crawler-test.com/path/one",
     "https://other.com/path/one",
+  ];
+  expect(actual).toEqual(expected);
+});
+
+test("getImagesFromHTML absolute", () => {
+  const inputURL = "https://crawler-test.com";
+  const inputBody = `<html><body><img src="https://crawler-test.com/logo.png" alt="Logo"></body></html>`;
+  const actual = getImagesFromHTML(inputBody, inputURL);
+  const expected = ["https://crawler-test.com/logo.png"];
+  expect(actual).toEqual(expected);
+});
+
+test("getImagesFromHTML relative", () => {
+  const inputURL = "https://crawler-test.com";
+  const inputBody = `<html><body><img src="/logo.png" alt="Logo"></body></html>`;
+  const actual = getImagesFromHTML(inputBody, inputURL);
+  const expected = ["https://crawler-test.com/logo.png"];
+  expect(actual).toEqual(expected);
+});
+
+test("getImagesFromHTML multiple", () => {
+  const inputURL = "https://crawler-test.com";
+  const inputBody =
+    `<html><body>` +
+    `<img src="/logo.png" alt="Logo">` +
+    `<img src="https://cdn.boot.dev/banner.jpg">` +
+    `</body></html>`;
+  const actual = getImagesFromHTML(inputBody, inputURL);
+  const expected = [
+    "https://crawler-test.com/logo.png",
+    "https://cdn.boot.dev/banner.jpg",
   ];
   expect(actual).toEqual(expected);
 });

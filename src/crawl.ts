@@ -44,3 +44,20 @@ export function getURLsFromHTML(html: string, baseURL: string): string[] {
 
   return urls;
 }
+
+export function getImagesFromHTML(html: string, baseURL: string): string[] {
+  const imageURLs: string[] = [];
+
+  const dom = new JSDOM(html);
+  const document = dom.window.document;
+  const images = document.querySelectorAll("img");
+
+  images.forEach((img) => {
+    const src = img.getAttribute("src");
+    if (!src) return;
+    const absoluteURL = new URL(src, baseURL).toString();
+    imageURLs.push(absoluteURL);
+  });
+
+  return imageURLs;
+}
