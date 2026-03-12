@@ -18,3 +18,5 @@ export function getHeadingFromHTML(html: string): string {
 
   return (heading?.textContent ?? "").trim();
 }
+
+export function getFirstParagraphFromHTML(html: string): string {}

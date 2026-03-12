@@ -1,4 +1,8 @@
-import { getHeadingFromHTML, normalizeURL } from "./crawl";
+import {
+  getFirstParagraphFromHTML,
+  getHeadingFromHTML,
+  normalizeURL,
+} from "./crawl";
 
 test("normalizeURL http protocol", () => {
   const input = "http://www.boot.dev/blog/path/";
@@ -53,5 +57,44 @@ test("getHeadingFromHTML fallback h2", () => {
   const inputBody = `<html><body><h2>Fallback</h2></body></html>`;
   const actual = getHeadingFromHTML(inputBody);
   const expected = "Fallback";
+  expect(actual).toEqual(expected);
+});
+
+test("getFirstParagraphFromHTML main priority", () => {
+  const inputBody = `
+    <html><body>
+      <p>Outside paragraph.</p>
+      <main>
+        <p>Main paragraph.</p>
+      </main>
+    </body></html>
+  `;
+  const actual = getFirstParagraphFromHTML(inputBody);
+  const expected = "Main paragraph.";
+  expect(actual).toEqual(expected);
+});
+
+test("getFirstParagraphFromHTML fallback first paragraph", () => {
+  const inputBody = `
+    <html><body>
+      <p>Outside paragraph.</p>
+      <main>
+      </main>
+    </body></html>
+  `;
+  const actual = getFirstParagraphFromHTML(inputBody);
+  const expected = "Outside paragraph.";
+  expect(actual).toEqual(expected);
+});
+
+test("getFirstParagraphFromHTML no paragraphs", () => {
+  const inputBody = `
+    <html><body>
+      <main>
+      </main>
+    </body></html>
+  `;
+  const actual = getFirstParagraphFromHTML(inputBody);
+  const expected = "";
   expect(actual).toEqual(expected);
 });
