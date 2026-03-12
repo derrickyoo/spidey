@@ -9,7 +9,8 @@
     "moduleResolution": "Node",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vitest/globals"]
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"]
