@@ -28,4 +28,19 @@ export function getFirstParagraphFromHTML(html: string): string {
   return (p?.textContent ?? "").trim();
 }
 
-export function getURLsFromHTML(html: string, baseURL: string): string[] {}
+export function getURLsFromHTML(html: string, baseURL: string): string[] {
+  const dom = new JSDOM(html);
+  const document = dom.window.document;
+  const anchors = document.querySelectorAll("a");
+
+  const urls: string[] = [];
+  anchors.forEach((anchor) => {
+    const href = anchor.getAttribute("href");
+    if (!href) return;
+
+    const absoluteURL = new URL(href, baseURL).toString();
+    urls.push(absoluteURL);
+  });
+
+  return urls;
+}
