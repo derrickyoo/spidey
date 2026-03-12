@@ -1,3 +1,5 @@
+import { JSDOM } from "jsdom";
+
 export function normalizeURL(url: string) {
   const urlObj = new URL(url);
   let fullPath = `${urlObj.hostname}${urlObj.pathname}`;
@@ -7,4 +9,12 @@ export function normalizeURL(url: string) {
   }
 
   return fullPath;
+}
+
+export function getHeadingFromHTML(html: string): string {
+  const dom = new JSDOM(html);
+  const document = dom.window.document;
+  const heading = document.querySelector("h1") ?? document.querySelector("h2");
+
+  return (heading?.textContent ?? "").trim();
 }
