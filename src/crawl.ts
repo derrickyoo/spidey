@@ -19,4 +19,11 @@ export function getHeadingFromHTML(html: string): string {
   return (heading?.textContent ?? "").trim();
 }
 
-export function getFirstParagraphFromHTML(html: string): string {}
+export function getFirstParagraphFromHTML(html: string): string {
+  const dom = new JSDOM(html);
+  const document = dom.window.document;
+  const main = document.querySelector("main");
+  const p = main?.querySelector("p") ?? document.querySelector("p");
+
+  return (p?.textContent ?? "").trim();
+}
