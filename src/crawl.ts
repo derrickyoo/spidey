@@ -27,3 +27,5 @@ export function getFirstParagraphFromHTML(html: string): string {
 
   return (p?.textContent ?? "").trim();
 }
+
+export function getURLsFromHTML(html: string, baseURL: string): string[] {}

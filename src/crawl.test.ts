@@ -1,6 +1,7 @@
 import {
   getFirstParagraphFromHTML,
   getHeadingFromHTML,
+  getURLsFromHTML,
   normalizeURL,
 } from "./crawl";
 
@@ -96,5 +97,38 @@ test("getFirstParagraphFromHTML no paragraphs", () => {
   `;
   const actual = getFirstParagraphFromHTML(inputBody);
   const expected = "";
+  expect(actual).toEqual(expected);
+});
+
+test("getURLsFromHTML from absolute", () => {
+  const inputURL = "https://crawler-test.com";
+  const inputBody = `<html><body><a href="https://crawler-test.com"><span>Boot.dev</span></a></body></html>`;
+  const actual = getURLsFromHTML(inputBody, inputURL);
+  const expected = ["https://crawler-test.com/"];
+  expect(actual).toEqual(expected);
+});
+
+test("getURLsFromHTML from relative", () => {
+  const inputURL = "https://crawler-test.com";
+  const inputBody = `<html><body><a href="/path/one"><span>Boot.dev</span></a></body></html>`;
+
+  const actual = getURLsFromHTML(inputBody, inputURL);
+  const expected = ["https://crawler-test.com/path/one"];
+
+  expect(actual).toEqual(expected);
+});
+
+test("getURLsFromHTML from both absolute and relative", () => {
+  const inputURL = "https://crawler-test.com";
+  const inputBody =
+    `<html><body>` +
+    `<a href="/path/one"><span>Boot.dev</span></a>` +
+    `<a href="https://other.com/path/one"><span>Boot.dev</span></a>` +
+    `</body></html>`;
+  const actual = getURLsFromHTML(inputBody, inputURL);
+  const expected = [
+    "https://crawler-test.com/path/one",
+    "https://other.com/path/one",
+  ];
   expect(actual).toEqual(expected);
 });
