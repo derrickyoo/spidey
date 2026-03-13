@@ -1,5 +1,4 @@
 import pLimit from "p-limit";
-import { normalizeURL } from "./crawl";
 
 export class ConcurrentCrawler {
   #baseURL: string;
@@ -45,5 +44,38 @@ export class ConcurrentCrawler {
 
       return res.text();
     });
+  }
+
+  async #crawlPage(currentURL: string) {
+    const currentURLObj = new URL(currentURL);
+    const baseURLObj = new URL(this.#baseURL);
+    if (currentURLObj.hostname !== baseURLObj.hostname) {
+      return this.#pages;
+    }
+
+    const normalizedURL = normalizeURL(currentURL);
+
+    if (pages[normalizedURL] > 0) {
+      pages[normalizedURL]++;
+      return pages;
+    }
+
+    pages[normalizedURL] = 1;
+
+    console.log(`crawling ${currentURL}`);
+    let html = "";
+    try {
+      html = await getHTML(currentURL);
+    } catch (err) {
+      console.log(`${(err as Error).message}`);
+      return pages;
+    }
+
+    const nextURLs = getURLsFromHTML(html, baseURL);
+    for (const nextURL of nextURLs) {
+      pages = await crawlPage(baseURL, nextURL, pages);
+    }
+
+    return pages;
   }
 }
