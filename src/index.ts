@@ -15,7 +15,8 @@ async function main() {
   const baseURL = args[0];
   console.log(`✅ crawler is starting at ${baseURL}`);
 
-  await getHTML(baseURL);
+  const html = await getHTML(baseURL);
+  console.log(html);
 
   process.exit(0);
 }
