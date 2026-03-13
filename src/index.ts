@@ -1,4 +1,4 @@
-import { getHTML } from "./crawl";
+import { crawlPage } from "./crawl";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -15,8 +15,9 @@ async function main() {
   const baseURL = args[0];
   console.log(`✅ crawler is starting at ${baseURL}`);
 
-  const html = await getHTML(baseURL);
-  console.log(html);
+  const pages = await crawlPage(baseURL);
+
+  console.log(pages);
 
   process.exit(0);
 }
