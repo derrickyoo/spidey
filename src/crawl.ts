@@ -82,3 +82,25 @@ export function extractPageData(
     image_urls: getImagesFromHTML(html, pageURL),
   };
 }
+
+export async function getHTML(currentURL: string): Promise<string> {
+  let res: Response;
+  try {
+    res = await fetch(currentURL, {
+      headers: { "User-Agent": "BootCrawler/1.0" },
+    });
+  } catch (err) {
+    throw new Error(`Network error: ${(err as Error).message}`);
+  }
+
+  if (res.status > 399) {
+    throw new Error(`HTTP error: ${res.status} ${res.statusText}`);
+  }
+
+  const contentType = res.headers.get("content-type");
+  if (!contentType || !contentType.includes("text/html")) {
+    throw new Error(`non-HTML response: ${contentType}`);
+  }
+
+  return res.text();
+}
